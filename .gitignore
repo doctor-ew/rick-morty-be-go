@@ -1,0 +1,28 @@
+# Go binaries and packages
+/bin/
+/pkg/
+
+# Go dependencies
+/vendor/
+/go.sum
+/go.mod
+
+# Compiled Go files
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Logs and debugging data
+/log/
+/debug
+
+# Environment-specific files
+.env
+.env.local
+.env.*.local
+
+# Editor-specific files
+.idea/
+.vscode/
