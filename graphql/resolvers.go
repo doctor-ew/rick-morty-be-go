@@ -26,6 +26,30 @@ type RickAndMortyAssociation struct {
 	Morties []Character `json:"morties"`
 }
 
+// Define GraphQL object type for Character
+var characterType = graphql.NewObject(graphql.ObjectConfig{
+	Name: "Character",
+	Fields: graphql.Fields{
+		"ID":       &graphql.Field{Type: graphql.String},
+		"Name":     &graphql.Field{Type: graphql.String},
+		"Status":   &graphql.Field{Type: graphql.String},
+		"Species":  &graphql.Field{Type: graphql.String},
+		"Type":     &graphql.Field{Type: graphql.String},
+		"Gender":   &graphql.Field{Type: graphql.String},
+		"Image":    &graphql.Field{Type: graphql.String},
+		"Episodes": &graphql.Field{Type: graphql.NewList(episodeType)}, // Assuming you'll define episodeType similarly
+	},
+})
+
+// Define GraphQL object type for Episode (assuming you'll use it later)
+var episodeType = graphql.NewObject(graphql.ObjectConfig{
+	Name: "Episode",
+	Fields: graphql.Fields{
+		"ID":   &graphql.Field{Type: graphql.String},
+		"Name": &graphql.Field{Type: graphql.String},
+	},
+})
+
 var (
 	// Define your query type here
 	queryType = graphql.NewObject(graphql.ObjectConfig{
@@ -40,12 +64,14 @@ var (
 					},
 				},
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-					// Implement your resolver logic here
-					// You can use the Redis client to cache data
-					name, _ := p.Args["name"].(string)
+					name, ok := p.Args["name"].(string)
+					if !ok {
+						return nil, fmt.Errorf("name argument is missing or not a string")
+					}
 					fmt.Printf("Fetching characters by name: %s\n", name)
 					// Implement the character retrieval logic
-					// Return characters as []Character
+					// For now, returning an empty list
+					// In a real-world scenario, you'd fetch this from a database or API
 					return []Character{}, nil
 				},
 			},
